@@ -1,115 +1,68 @@
 package org.example;
-import java.util.ArrayList;
+import java.util.Comparator;
 
-
-class Car {
-    private String licensePlate;
-    private String brand;
-
-    public Car(String licensePlate, String brand) {
-        this.licensePlate = licensePlate;
-        this.brand = brand;
-    }
-
-    // write getLicencePlate(){}
-
-    // write getBrand(){}
-
-}
-
-class ParkingSpace<T> {
-    private Node<T> head;
-
-    public void parkCar(T car) {
-        Node<T> newNode = new Node<>(car);
-        newNode.next = head;
-        head = newNode;
-    }
-
-    public void removeCar(T car) {
-        Node<T> current = head;
-        Node<T> prev = null;
-
-        while (current != null && !current.data.equals(car)) {
-            prev = current;
-            current = current.next;
-        }
-
-        if (current != null) {
-            if (prev == null) {
-                head = current.next;
-            } else {
-                prev.next = current.next;
-            }
-        }
-    }
-
-    // public void sort() {}
-
-
-
-
-
-    public void printSpaces() {
-        Node<T> current = head;
-        while (current != null) {
-            System.out.println(current.data);
-            current = current.next;
-        }
-    }
-
-    private static class Node<T> {
-        private T data;
-        private Node<T> next;
-
-        public Node(T data) {
-            this.data = data;
-        }
+class sortBySpotNumber implements Comparator<ParkingSpot<?>> {
+    // Comparator for sorting parking spots in ascending order
+    public int compare(ParkingSpot<?> a, ParkingSpot<?> b) {
+        return a.getSpotNumber() - b.getSpotNumber();
+        // Compare spot numbers of parking spots a and b
+        // We get positive if "a" is greater, negative if smaller and if equal we get 0
     }
 }
-
-class ParkingLot {
-    private ParkingSpace<Car> parkingSpaces;
-
-    public ParkingLot() {
-        parkingSpaces = new ParkingSpace<>();
-    }
-
-    public void parkCar(Car car) {
-        parkingSpaces.parkCar(car);
-    }
-
-    public void removeCar(Car car) {
-        parkingSpaces.removeCar(car);
-    }
-
-    public void analyzeIncomingCars() {
-        // Simulate the process of analyzing incoming cars
-    }
-
-    public void printParkingSpaces() {
-        System.out.println("Self Parking Spaces:");
-        parkingSpaces.printSpaces();
+class sortByOccupancy implements Comparator<ParkingSpot<?>> {
+    // Comparator for sorting the parking spaces, the occupied come first.
+    public int compare(ParkingSpot<?> a, ParkingSpot<?> b) {
+        return Boolean.compare(b.isOccupied(), a.isOccupied());
+        // We compare if a or b is occupied and then sort.
+        // If b is occupied and 'a' isn't we get negative return,
     }
 }
-
-public class ParkingGarage {
+public class ParkingGarage { // ParkingGarage class that includes the main method, calls parkingLot class, parkingSpot class
     public static void main(String[] args) {
-        // Car car1 = new Car("ABC123", "BMW");
+        // string type generic class and passing in x-amount of parking spots
+        ParkingLot<String> pLot = new ParkingLot<>(10);
+
+        // display available spots before parking
+        System.out.println("Available spots before parking:");
+        pLot.iterateOverSpots();
+
+        // parking cars in available spots
+        pLot.parkCar("ABC123");
+        pLot.parkCar("ABC1233545");
+        pLot.parkCar("ABC2424123");
+
+        // displaying available spots after parking
+        System.out.println("\nAvailable spots after parking:");
+        pLot.iterateOverSpots();
+
+        // park another item in spot 3
+        System.out.println("\nTrying to park another car in the occupied slot:");
+        pLot.parkCar("XYZ9876", 3); // Parking another car at the occupied spot #3
+
+        // vacating a spot
+        System.out.println("\nVacating spot #2");
+        pLot.vacateSpot(2);
+        System.out.println("Park another car in the spot 4: ");
+        System.out.print("\n");
+        pLot.parkCar("OPQ8901", 4); // Parking another car at the spot #4
+
+        // Display spots after vacating
+        System.out.println("\nParking spots after vacating spot 2:");
+        pLot.iterateOverSpots();
+
+        pLot.parkCar("ZXY123", 7);
+        pLot.parkCar("ZXB4321",9);
+        pLot.parkCar("SDA98543");
+
+        // Sort parking spots and display again
+        // Sort parking spots by spot number
+        pLot.sortParkingSpotsBySpotNumber();
+
+        // Sort parking spots by occupancy
+        pLot.sortParkingSpotsByOccupancy();
+        System.out.println("\nParking spots after sorting:");
+        pLot.iterateOverSpots();
 
 
-        // ParkingLot parkingLot = new ParkingLot();
-
-        //parkingLot.parkCar(car1);
-
-
-        // Simulate sorting self-parking spaces based on license plate
-        // parkingLot.analyzeIncomingCars(); // Implement your analysis logic here
-
-        //parkingLot.parkingSpaces.sort();
-
-        // System.out.println("\nSorted Parking Spaces:");
-        // parkingLot.printParkingSpaces();
     }
 }
-
