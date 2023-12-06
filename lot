@@ -1,0 +1,210 @@
+public class vehicle {
+    private String licensePlate;
+    private String vehicleType;
+
+    public vehicle(String licensePlate, String vehicleType) {
+        this.licensePlate = licensePlate;
+        this.vehicleType = vehicleType;
+    }
+
+    // getter methods for licensePlate and vehicleType
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+}
+public class parkingSpot<T> {
+    private int spotNumber;
+    private boolean occupied;
+    private T parkedItem;
+    private double payment; // New field for payment
+
+    public parkingSpot(int spotNumber) {
+        this.spotNumber = spotNumber;
+        this.occupied = false;
+        this.parkedItem = null;
+        this.payment = 0.0;
+    }
+
+    public int getSpotNumber() {
+        return spotNumber;
+    }
+
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public T getParkedItem() {
+        return parkedItem;
+    }
+
+    public void occupySpot(T item) {
+        this.occupied = true;
+        this.parkedItem = item;
+    }
+
+    public void vacateSpot() {
+        this.occupied = false;
+        this.parkedItem = null;
+    }
+     public double getPayment() {
+        return payment;
+    }
+
+    // Method to calculate payment (assuming a flat rate of $5 for parking)
+    public void calculatePayment() {
+        if (occupied) {
+            payment += 5.0;
+        }
+    }
+}
+public class parkingLot<T> {
+    private int totalSpots;
+    private ArrayList<parkingSpot<T>> parkingSpots;
+
+    public parkingLot(int totalSpots) {
+        this.totalSpots = totalSpots;
+        this.parkingSpots = new ArrayList<>();
+
+        for (int i = 1; i <= totalSpots; i++) {
+            parkingSpots.add(new parkingSpot<>(i));
+        }
+    }
+
+    public int getTotalSpots() {
+        return totalSpots;
+    }
+
+    public ArrayList<parkingSpot<T>> findAvailableSpots() { // linear search
+        ArrayList<parkingSpot<T>> availableSpots = new ArrayList<>();
+        for (parkingSpot<T> spot : parkingSpots) {
+            if (!spot.isOccupied()) {
+                availableSpots.add(spot);
+            }
+        }
+        return availableSpots;
+    }
+
+    public void parkItem(T item) {
+        ArrayList<parkingSpot<T>> availableSpots = findAvailableSpots();
+        if (!availableSpots.isEmpty()) {
+            parkingSpot<T> firstAvailableSpot = availableSpots.get(0);
+            firstAvailableSpot.occupySpot(item);
+            System.out.println("Item (License Plate: " + item + ") parked in spot " + firstAvailableSpot.getSpotNumber() + ".");
+        } else {
+            System.out.println("No available spots. Parking lot is full.");
+        }
+    }
+
+    public void parkItem(T item, int spotNumber) {
+        if (spotNumber < 1 || spotNumber > totalSpots) {
+            System.out.println("Invalid spot number. Please choose a spot within the valid range.");
+            return;
+        }
+
+        parkingSpot<T> targetSpot = parkingSpots.get(spotNumber - 1);
+
+        if (targetSpot.isOccupied()) {
+            System.out.println("Spot " + spotNumber + " is already occupied.");
+        } else {
+            targetSpot.occupySpot(item);
+            System.out.println("Item parked in spot " + spotNumber + ".");
+        }
+    }
+
+    public void vacateSpot(int spotNumber) {
+        for (parkingSpot<T> spot : parkingSpots) {
+            if (spot.getSpotNumber() == spotNumber && spot.isOccupied()) {
+                spot.vacateSpot();
+                System.out.println("Spot " + spotNumber + " vacated.");
+                return;
+            }
+        }
+        System.out.println("Spot " + spotNumber + " is not occupied.");
+    }
+
+    public void sortParkingSpotsBySpotNumber() {
+        Collections.sort(parkingSpots, new sortBySpotNumber());
+    }
+
+    public void sortParkingSpotsByOccupancy() {
+        Collections.sort(parkingSpots, new sortByOccupancy());
+    }
+
+     public void iterateOverSpots() {
+        for (parkingSpot<T> spot : parkingSpots) {
+            System.out.println("Spot " + spot.getSpotNumber() +
+                    (spot.isOccupied() ? " (Occupied - License Plate: " + spot.getParkedItem() + ")" : " (Available)"));
+        }
+    }
+     public void payForParking(int spotNumber) {
+        for (parkingSpot<T> spot : parkingSpots) {
+            if (spot.getSpotNumber() == spotNumber && spot.isOccupied()) {
+                spot.calculatePayment();
+                System.out.println("Payment of $5 received for spot " + spotNumber + ".");
+                return;
+            }
+        }
+        System.out.println("Spot " + spotNumber + " is not occupied.");
+    }
+}
+class sortBySpotNumber implements Comparator<parkingSpot<?>> {
+    // Sorting in ascending order of spot number
+    public int compare(parkingSpot<?> a, parkingSpot<?> b) {
+        return a.getSpotNumber() - b.getSpotNumber();
+    }
+}
+class sortByOccupancy implements Comparator<parkingSpot<?>> {
+    // Sorting in ascending order of occupancy (occupied spots first)
+    public int compare(parkingSpot<?> a, parkingSpot<?> b) {
+        return Boolean.compare(b.isOccupied(), a.isOccupied());
+    }
+}
+public class Main {
+
+    public static void main(String[] args) {
+   // string type generic class and passing in 5 parking spots
+    parkingLot<String> pLot = new parkingLot<>(5);
+
+    // display available spots before parking
+    System.out.println("Available spots before parking:");
+    pLot.iterateOverSpots();
+
+    // parking cars in available spots
+    pLot.parkItem("ABC123");
+    pLot.parkItem("ABC1233545");
+    pLot.parkItem("ABC2424123");
+
+    // displaying available spots after parking
+    System.out.println("\nAvailable spots after parking:");
+    pLot.iterateOverSpots();
+
+    // park another item in spot 3
+    pLot.parkItem("XYZ9876", 3); // Added license plate "XYZ9876"
+
+    // Vacate a spot
+    pLot.vacateSpot(2);
+    pLot.parkItem("LMN4567", 2); // Added license plate "LMN4567"
+    pLot.parkItem("OPQ8901", 4); // Added license plate "OPQ8901"
+
+    // Display spots after vacating
+    System.out.println("\nParking spots after vacating spot 2:");
+    pLot.iterateOverSpots();
+
+    // Sort parking spots and display again
+    // Sort parking spots by spot number
+    pLot.sortParkingSpotsBySpotNumber();
+    
+    // Sort parking spots by occupancy
+    pLot.sortParkingSpotsByOccupancy();
+    System.out.println("\nParking spots after sorting:");
+    pLot.iterateOverSpots();
+    
+    pLot.payForParking(1);
+ 
+    }
+}
