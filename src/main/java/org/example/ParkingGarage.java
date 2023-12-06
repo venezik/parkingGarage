@@ -27,9 +27,9 @@ public class ParkingGarage { // ParkingGarage class that includes the main metho
         pLot.iterateOverSpots();
 
         // parking cars in available spots
-        pLot.parkCar("ABC123");
-        pLot.parkCar("ABC1233545");
-        pLot.parkCar("ABC2424123");
+        pLot.parkCar("ABC123",10);
+        pLot.parkCar("ABC1233545",3);
+        pLot.parkCar("ABC2424123",25);
 
         // displaying available spots after parking
         System.out.println("\nAvailable spots after parking:");
@@ -50,9 +50,9 @@ public class ParkingGarage { // ParkingGarage class that includes the main metho
         System.out.println("\nParking spots after vacating spot 2:");
         pLot.iterateOverSpots();
 
-        pLot.parkCar("ZXY123", 7);
-        pLot.parkCar("ZXB4321",9);
-        pLot.parkCar("SDA98543");
+        pLot.parkCar("ZXY123",7, 7);
+        pLot.parkCar("ZXB4321",9,6);
+        pLot.parkCar("SDA98543",1);
 
         // Sort parking spots and display again
         // Sort parking spots by spot number
@@ -64,6 +64,12 @@ public class ParkingGarage { // ParkingGarage class that includes the main metho
         pLot.sortParkingSpotsByOccupancy();
         System.out.println("\nParking spots after sorting:");
         pLot.iterateOverSpots();
+
+        System.out.println("\nVacating spaces: ");
+        System.out.println("Balance update");
+        pLot.vacateSpot(7);
+        pLot.vacateSpot(9);
+        pLot.vacateSpot(5);
 
 
     }

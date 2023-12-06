@@ -6,6 +6,7 @@ import java.util.List;
 
 public class ParkingLot<T> { // a parking spot that can hold a generic type of item
     private int totalSpots;
+    public int hour;
     private ArrayList<ParkingSpot<T>> parkingSpots; // array list to store parking spots of generic type t in the parking lot
 
     public ParkingLot(int totalSpots) { //this is a constructor
@@ -27,11 +28,11 @@ public class ParkingLot<T> { // a parking spot that can hold a generic type of i
         return availableSpots;
     }
 
-    public void parkCar(T car) { // park a car in an available spot
+    public void parkCar(T car, int hours) { // park a car in an available spot
         List<ParkingSpot<T>> availableSpots = findAvailableSpots();  // find available spots in the parking lot
         if (!availableSpots.isEmpty()) { // Conditional to check if there are available spots
             ParkingSpot<T> firstAvailableSpot = availableSpots.get(0); // get the first available spot
-            firstAvailableSpot.occupySpot(car);   // occupy the spot with the item
+            firstAvailableSpot.occupySpot(car,hours);   // occupy the spot with the item
 
             // print a message indicating the successful parking
             System.out.println(" ");
@@ -42,7 +43,7 @@ public class ParkingLot<T> { // a parking spot that can hold a generic type of i
         }
     }
 
-    public void parkCar(T car, int spotNumber) { // Method to park a car in a specific spot example in main method
+    public void parkCar(T car, int spotNumber, int hours) { // Method to park a car in a specific spot example in main method
         if (spotNumber < 1 || spotNumber > totalSpots) {   // Conditional to check if the specified spot number is valid
             System.out.println("Invalid spot number. Please choose a spot within the valid range.");
             return;
@@ -53,7 +54,7 @@ public class ParkingLot<T> { // a parking spot that can hold a generic type of i
         if (targetSpot.isOccupied()) {  // Conditional to check if the target spot is preoccupied
             System.out.println("\nSpot " + spotNumber + " is already occupied.");
         } else {
-            targetSpot.occupySpot(car); // Park/occupy specific spot with the car
+            targetSpot.occupySpot(car,hours); // Park/occupy specific spot with the car
             System.out.println("Car with License Plate: " + car + " has been parked in spot " + spotNumber + "."); // Output
         }
     }
@@ -62,8 +63,10 @@ public class ParkingLot<T> { // a parking spot that can hold a generic type of i
     public void vacateSpot(int spotNumber) { // Method that we use to remove/vacate specified spot and charge the parking fee
         for (ParkingSpot<T> spot : parkingSpots) {   // iterate through each spot in the parking lot
             if (spot.getSpotNumber() == spotNumber && spot.isOccupied()) {    // Conditional to check if the spot matches the specified spot number and is occupied
-                spot.calculatePayment(); // Calling the calculatePayment method which is simplified for a flat fee of $5 per parking period.
-                System.out.println("Payment of $5 received for spot " + spotNumber + "."); // print a message indicating the received payment
+                int hoursParked = spot.getHours();
+                double payment = 5.0 * hoursParked;
+                spot.calculatePayment(payment); // Calling the calculatePayment method
+                System.out.println("Payment of $" + payment + " received for spot " + spotNumber + "."); // print a message indicating the received payment
                 spot.vacateSpot();  // vacate the spot
                 System.out.println("Spot " + spotNumber + " vacated.");  // Output a message indicating the vacated spot
                 return;
