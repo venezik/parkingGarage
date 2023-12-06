@@ -57,6 +57,8 @@ public class ParkingGarage { // ParkingGarage class that includes the main metho
         // Sort parking spots and display again
         // Sort parking spots by spot number
         pLot.sortParkingSpotsBySpotNumber();
+        System.out.println("\nParking spots after sorting by number: ");
+        pLot.iterateOverSpots();
 
         // Sort parking spots by occupancy
         pLot.sortParkingSpotsByOccupancy();
