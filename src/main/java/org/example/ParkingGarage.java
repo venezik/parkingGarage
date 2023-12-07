@@ -1,4 +1,4 @@
-package parkinGarage;
+package org.example;
 
 import java.util.Comparator;
 

@@ -1,4 +1,4 @@
-package parkinGarage;
+package org.example;
 
 public class ParkingSpot<T> { // class to represent parking space. <T> abstract Type to represent a car that is being parked.
     private final int spotNumber; // variable to represent a parking spot
@@ -40,7 +40,7 @@ public class ParkingSpot<T> { // class to represent parking space. <T> abstract 
         if (occupied) {
             // assume a flat fee of $5.0 for simplicity
             balance += 5.0;
-            System.out.println("Your balance is now: $" + balance); // prints it out
+            System.out.println("Payment of $5 received for spot " + spotNumber + "."); // print a message indicating the received payment
             return balance; // return the updated balance
         }
         return balance; // return balance if no payment is made

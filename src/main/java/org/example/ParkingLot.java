@@ -1,4 +1,4 @@
-package parkinGarage;
+package org.example;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -62,7 +62,6 @@ public class ParkingLot<T> { // a parking spot that can hold a generic type of i
         for (ParkingSpot<T> spot : parkingSpots) {   // iterate through each spot in the parking lot
             if (spot.getSpotNumber() == spotNumber && spot.isOccupied()) {    // conditional to check if the spot matches the specified spot number and is occupied
                 spot.calculatePayment(); // calling the calculatePayment method which is simplified for a flat fee of $5 per parking period.
-                System.out.println("Payment of $5 received for spot " + spotNumber + "."); // print a message indicating the received payment
                 spot.vacateSpot();  // vacate the spot
                 System.out.println("Spot " + spotNumber + " vacated.");  // Output a message indicating the vacated spot
                //System.out.println(spot.calculatePayment());
